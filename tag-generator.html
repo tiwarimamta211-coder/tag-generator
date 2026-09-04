@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Tag Generator — Free SEO Keywords, Hashtags & YouTube Tags | IncomeAIHub</title>
+<meta name="description" content="Free AI-style Tag & Hashtag Generator for YouTube, Instagram, Twitter/X, Facebook and Blog SEO. Generate keywords, hashtags and long-tail tags instantly." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05070d;
+    --bg-grad:#070b16;
+    --panel:#0a0f1f;
+    --panel-2:#0c1428;
+    --border:rgba(34,211,238,.22);
+    --border-strong:rgba(34,211,238,.45);
+    --cyan:#22d3ee;
+    --cyan-soft:rgba(34,211,238,.12);
+    --purple:#a855f7;
+    --purple-soft:rgba(168,85,247,.14);
+    --green:#39ff88;
+    --green-soft:rgba(57,255,136,.12);
+    --warn:#ffb020;
+    --danger:#ff4d6d;
+    --text:#e7f1ff;
+    --muted:#8ea3c2;
+    --muted-2:#5c6d8a;
+    --radius:12px;
+    --mono: 'Share Tech Mono', monospace;
+    --head: 'Orbitron', sans-serif;
+    --body: 'Rajdhani', sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:
+      radial-gradient(1100px 600px at 15% -10%, rgba(168,85,247,.10), transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, rgba(34,211,238,.10), transparent 55%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg-grad) 100%);
+    color:var(--text);
+    font-family:var(--body);
+    font-size:16px;
+    line-height:1.5;
+    position:relative;
+    overflow-x:hidden;
+  }
+
+  /* ambient grid + scanlines */
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(rgba(34,211,238,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(34,211,238,.05) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(circle at 50% 0%, black 0%, transparent 70%);
+    pointer-events:none;
+    z-index:0;
+  }
+  .scanlines{
+    position:fixed; inset:0;
+    background:repeating-linear-gradient(
+      0deg, rgba(255,255,255,.025) 0px, rgba(255,255,255,.025) 1px,
+      transparent 1px, transparent 3px
+    );
+    pointer-events:none;
+    z-index:0;
+    animation:scan-drift 9s linear infinite;
+    opacity:.5;
+  }
+  @keyframes scan-drift{
+    0%{ background-position:0 0; }
+    100%{ background-position:0 120px; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .scanlines{ animation:none; }
+    *{ animation-duration:.001ms !important; transition-duration:.001ms !important; }
+  }
+
+  a{color:var(--cyan);}
+  :focus-visible{ outline:2px solid var(--cyan); outline-offset:2px; }
+
+  /* ---------- layout ---------- */
+  .site-header{
+    position:relative; z-index:1;
+    text-align:center;
+    padding:38px 16px 22px;
+  }
+  .logo-row{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+  }
+  .logo-icon{
+    font-size:26px;
+    filter:drop-shadow(0 0 8px rgba(34,211,238,.6));
+  }
+  .site-header h1{
+    font-family:var(--head);
+    font-weight:900;
+    font-size:clamp(26px, 5vw, 42px);
+    letter-spacing:2px;
+    margin:0;
+    background:linear-gradient(90deg, var(--cyan) 0%, var(--purple) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .site-header h1 span{ color:var(--green); -webkit-text-fill-color:var(--green); }
+  .tagline{
+    margin:10px auto 0;
+    max-width:560px;
+    color:var(--muted);
+    font-size:15px;
+    letter-spacing:.3px;
+  }
+
+  .wrap{
+    position:relative; z-index:1;
+    max-width:900px;
+    margin:0 auto;
+    padding:0 16px 60px;
+    display:flex; flex-direction:column; gap:20px;
+  }
+
+  .panel{
+    background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:22px;
+    box-shadow:0 0 0 1px rgba(0,0,0,.2), 0 20px 40px -25px rgba(34,211,238,.25);
+  }
+
+  /* ---------- ad slots ---------- */
+  .ad-slot{
+    position:relative; z-index:1;
+    max-width:900px;
+    margin:0 auto;
+    border:1px dashed rgba(142,163,194,.3);
+    border-radius:10px;
+    min-height:90px;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--muted-2);
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+  }
+  .ad-top{ margin:0 16px 24px; }
+  .ad-mid, .ad-bottom{ margin:4px 16px 4px; }
+  /* Replace this block with your real AdSense <ins> unit + script */
+
+  /* ---------- input panel ---------- */
+  .field{ display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+  .field label{
+    font-size:13px; letter-spacing:.6px; color:var(--cyan-soft);
+    color:#7fd8e8; font-weight:600;
+  }
+  .field input[type="text"], .field select{
+    background:#060a15;
+    border:1px solid var(--border);
+    color:var(--text);
+    border-radius:8px;
+    padding:12px 14px;
+    font-family:var(--body);
+    font-size:16px;
+    font-weight:500;
+    width:100%;
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .field input[type="text"]:focus, .field select:focus{
+    border-color:var(--cyan);
+    box-shadow:0 0 0 3px rgba(34,211,238,.15);
+  }
+  .field select{ appearance:none; cursor:pointer;
+    background-image:linear-gradient(45deg, transparent 50%, var(--cyan) 50%), linear-gradient(135deg, var(--cyan) 50%, transparent 50%);
+    background-position: calc(100% - 18px) center, calc(100% - 13px) center;
+    background-size:5px 5px, 5px 5px;
+    background-repeat:no-repeat;
+  }
+  .char-count{ font-family:var(--mono); font-size:11px; color:var(--muted-2); align-self:flex-end; }
+  .char-count.warn{ color:var(--warn); }
+
+  .field-row{
+    display:grid;
+    grid-template-columns:1fr 1.4fr;
+    gap:16px;
+    align-items:start;
+  }
+
+  .platform-tabs{
+    display:flex; flex-wrap:wrap; gap:8px;
+  }
+  .ptab{
+    font-family:var(--body);
+    font-weight:600;
+    font-size:13.5px;
+    background:#060a15;
+    border:1px solid var(--border);
+    color:var(--muted);
+    padding:10px 14px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:all .15s ease;
+    white-space:nowrap;
+  }
+  .ptab:hover{ border-color:var(--border-strong); color:var(--text); }
+  .ptab.active{
+    background:linear-gradient(90deg, var(--cyan-soft), var(--purple-soft));
+    border-color:var(--cyan);
+    color:#fff;
+    box-shadow:0 0 14px -4px rgba(34,211,238,.7);
+  }
+
+  .actions-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top:6px; }
+  .btn{
+    font-family:var(--body);
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:.3px;
+    border-radius:8px;
+    padding:12px 20px;
+    cursor:pointer;
+    border:1px solid transparent;
+    transition:transform .1s ease, box-shadow .15s ease, opacity .15s ease;
+  }
+  .btn:active{ transform:translateY(1px) scale(.99); }
+  .btn:disabled{ opacity:.4; cursor:not-allowed; }
+  .btn-primary{
+    background:linear-gradient(90deg, var(--cyan) 0%, var(--purple) 100%);
+    color:#05070d;
+    box-shadow:0 8px 24px -10px rgba(34,211,238,.7);
+  }
+  .btn-primary:hover:not(:disabled){ box-shadow:0 8px 28px -8px rgba(168,85,247,.8); }
+  .btn-ghost{
+    background:transparent;
+    border-color:var(--border);
+    color:var(--text);
+  }
+  .btn-ghost:hover:not(:disabled){ border-color:var(--border-strong); background:rgba(34,211,238,.06); }
+
+  .history-row{
+    margin-top:16px; padding-top:14px;
+    border-top:1px dashed var(--border);
+    display:flex; align-items:flex-start; gap:10px; flex-wrap:wrap;
+  }
+  .history-label{ font-family:var(--mono); font-size:12px; color:var(--muted-2); padding-top:6px; }
+  .history-chips{ display:flex; flex-wrap:wrap; gap:8px; }
+  .hist-chip{
+    background:transparent; border:1px solid rgba(142,163,194,.3);
+    color:var(--muted); font-size:12.5px; padding:6px 10px; border-radius:999px; cursor:pointer;
+    font-family:var(--body);
+  }
+  .hist-chip:hover{ border-color:var(--cyan); color:var(--text); }
+
+  /* ---------- results ---------- */
+  .stats-bar{
+    display:flex; gap:22px; align-items:center; flex-wrap:wrap;
+    padding-bottom:18px; margin-bottom:18px;
+    border-bottom:1px solid var(--border);
+  }
+  .stat{ display:flex; flex-direction:column; gap:2px; }
+  .stat span{ font-family:var(--mono); font-size:20px; color:var(--cyan); }
+  .stat label{ font-size:11.5px; color:var(--muted-2); letter-spacing:.5px; }
+  .limit-stat{ flex:1; min-width:180px; }
+  .limit-track{
+    height:6px; width:100%; border-radius:999px; background:rgba(142,163,194,.15); overflow:hidden;
+  }
+  .limit-fill{
+    height:100%; width:0%; border-radius:999px;
+    background:var(--green);
+    transition:width .3s ease, background-color .3s ease;
+  }
+  .limit-stat label{ display:block; margin-top:6px; font-family:var(--mono); }
+
+  .result-block{ margin-bottom:22px; }
+  .result-block:last-of-type{ margin-bottom:0; }
+  .result-head{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    margin-bottom:10px;
+  }
+  .result-head h2{
+    font-family:var(--head);
+    font-size:14px;
+    letter-spacing:1px;
+    margin:0;
+    color:var(--text);
+    font-weight:700;
+  }
+  .mini-note{
+    font-family:var(--body); font-weight:500; font-size:12px; color:var(--muted-2); letter-spacing:0;
+    display:block; margin-top:2px;
+  }
+  .copy-all-btn{
+    font-family:var(--mono);
+    font-size:11.5px;
+    background:transparent;
+    border:1px solid var(--border);
+    color:var(--cyan);
+    padding:6px 12px;
+    border-radius:999px;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .copy-all-btn:hover{ background:var(--cyan-soft); border-color:var(--cyan); }
+
+  .chip-grid{ display:flex; flex-wrap:wrap; gap:8px; min-height:34px; }
+  .chip{
+    position:relative;
+    font-family:var(--body);
+    font-weight:600;
+    font-size:13.5px;
+    color:var(--text);
+    background:rgba(34,211,238,.06);
+    border:1px solid var(--border);
+    padding:8px 12px 8px 10px;
+    border-radius:8px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    transition:background .15s ease, border-color .15s ease, transform .1s ease;
+  }
+  .chip:hover{ border-color:var(--border-strong); background:rgba(34,211,238,.12); transform:translateY(-1px); }
+  .chip .dot{ width:7px; height:7px; border-radius:50%; flex:none; }
+  .dot.low{ background:var(--green); box-shadow:0 0 6px var(--green); }
+  .dot.med{ background:var(--warn); box-shadow:0 0 6px var(--warn); }
+  .dot.high{ background:var(--danger); box-shadow:0 0 6px var(--danger); }
+  .chip.copied{
+    border-color:var(--green);
+    background:var(--green-soft);
+    color:#c9ffe0;
+  }
+  .chip.copied::after{
+    content:"✓";
+    color:var(--green);
+    font-weight:900;
+  }
+  .empty-note{ color:var(--muted-2); font-size:13px; font-family:var(--mono); }
+
+  .legend{
+    display:flex; gap:16px; flex-wrap:wrap;
+    font-family:var(--mono); font-size:11.5px; color:var(--muted-2);
+    margin-top:16px; padding-top:14px; border-top:1px dashed var(--border);
+  }
+  .legend span{ display:inline-flex; align-items:center; gap:6px; }
+  .legend .dot{ width:7px; height:7px; border-radius:50%; }
+
+  .global-actions{
+    display:flex; flex-wrap:wrap; gap:10px;
+    margin-top:22px; padding-top:20px; border-top:1px solid var(--border);
+  }
+
+  /* ---------- toast ---------- */
+  .toast{
+    position:fixed; left:50%; bottom:22px; transform:translate(-50%, 14px);
+    background:#0b1224; border:1px solid var(--cyan); color:var(--text);
+    font-family:var(--body); font-weight:600; font-size:13.5px;
+    padding:10px 18px; border-radius:999px;
+    box-shadow:0 10px 30px -10px rgba(34,211,238,.6);
+    opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease;
+    z-index:50; max-width:88vw; text-align:center;
+  }
+  .toast.show{ opacity:1; transform:translate(-50%, 0); }
+
+  /* ---------- guide panel ---------- */
+  .guide-panel{ border-color:rgba(168,85,247,.28); }
+  .guide-title{
+    font-family:var(--head); font-size:16px; letter-spacing:.5px;
+    margin:0 0 14px; color:var(--purple);
+  }
+  .guide-steps{ margin:0 0 18px; padding-left:20px; color:var(--text); }
+  .guide-steps li{ margin-bottom:8px; font-size:15px; }
+  .guide-steps li strong{ color:var(--cyan); }
+  .guide-tips h3{
+    font-family:var(--body); font-size:15px; color:var(--green); margin:0 0 8px;
+  }
+  .guide-tips ul{ margin:0; padding-left:20px; }
+  .guide-tips li{ margin-bottom:6px; font-size:14.5px; color:var(--muted); }
+
+  .site-footer{
+    position:relative; z-index:1;
+    text-align:center;
+    padding:26px 16px 40px;
+    color:var(--muted-2);
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.4px;
+  }
+
+  /* ---------- responsive ---------- */
+  @media (max-width:640px){
+    .panel{ padding:16px; border-radius:10px; }
+    .field-row{ grid-template-columns:1fr; gap:14px; }
+    .actions-row .btn, .global-actions .btn{ flex:1 1 100%; text-align:center; }
+    .stats-bar{ gap:14px; }
+    .stat span{ font-size:17px; }
+    .result-head{ flex-direction:row; align-items:flex-start; }
+    .ad-top{ margin-bottom:18px; }
+  }
+  @media (min-width:641px){
+    .actions-row .btn{ flex:none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="scanlines" aria-hidden="true"></div>
+
+<header class="site-header">
+  <div class="logo-row">
+    <span class="logo-icon" aria-hidden="true">🏷️</span>
+    <h1>TAG<span>GEN</span></h1>
+  </div>
+  <p class="tagline">Instant SEO keywords, hashtags &amp; YouTube tags — built for YouTube, Instagram, Twitter/X, Facebook &amp; Blog SEO</p>
+</header>
+
+<div class="ad-slot ad-top" aria-label="advertisement"><span>Ad Space — 728×90 / responsive</span></div>
+
+<main class="wrap">
+
+  <!-- INPUT PANEL -->
+  <section class="panel input-panel">
+    <div class="field">
+      <label for="topicInput">Topic / Title / Keyword</label>
+      <input id="topicInput" type="text" maxlength="100" autocomplete="off"
+             placeholder="e.g. digital marketing for beginners" />
+      <span id="charCount" class="char-count">0 / 100</span>
+    </div>
+
+    <div class="field-row">
+      <div class="field" style="margin-bottom:0;">
+        <label for="nicheSelect">Niche</label>
+        <select id="nicheSelect">
+          <option value="general">General</option>
+          <option value="business">Business</option>
+          <option value="tech">Tech</option>
+          <option value="fitness">Fitness</option>
+          <option value="food">Food</option>
+          <option value="travel">Travel</option>
+          <option value="fashion">Fashion</option>
+          <option value="education">Education</option>
+          <option value="finance">Finance</option>
+          <option value="beauty">Beauty</option>
+          <option value="gaming">Gaming</option>
+          <option value="music">Music</option>
+          <option value="photography">Photography</option>
+          <option value="realestate">Real Estate</option>
+          <option value="health">Health</option>
+          <option value="motivation">Motivation</option>
+        </select>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label>Platform</label>
+        <div class="platform-tabs" role="tablist" id="platformTabs">
+          <button class="ptab active" data-platform="youtube" type="button">YouTube</button>
+          <button class="ptab" data-platform="instagram" type="button">Instagram</button>
+          <button class="ptab" data-platform="twitter" type="button">Twitter / X</button>
+          <button class="ptab" data-platform="facebook" type="button">Facebook</button>
+          <button class="ptab" data-platform="seo" type="button">Blog / SEO</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions-row">
+      <button id="generateBtn" class="btn btn-primary" type="button">⚡ Generate Tags</button>
+      <button id="shuffleBtn" class="btn btn-ghost" type="button" disabled>🔀 Shuffle Results</button>
+      <button id="clearBtn" class="btn btn-ghost" type="button">Clear</button>
+    </div>
+
+    <div id="historyRow" class="history-row" hidden>
+      <span class="history-label">RECENT:</span>
+      <div id="historyChips" class="history-chips"></div>
+    </div>
+  </section>
+
+  <!-- RESULTS PANEL -->
+  <section id="resultsSection" class="panel results-panel" hidden>
+
+    <div class="stats-bar">
+      <div class="stat"><span id="statCount">0</span><label>TAGS SHOWN</label></div>
+      <div class="stat"><span id="statChars">0</span><label>CHARACTERS</label></div>
+      <div class="stat limit-stat">
+        <div class="limit-track"><div id="limitFill" class="limit-fill"></div></div>
+        <label id="limitLabel">Platform limit</label>
+      </div>
+    </div>
+
+    <div class="result-block">
+      <div class="result-head">
+        <h2>Primary Tags / Keywords</h2>
+        <button class="copy-all-btn" data-target="primaryTags" type="button">Copy All</button>
+      </div>
+      <div id="primaryTags" class="chip-grid"></div>
+    </div>
+
+    <div class="result-block">
+      <div class="result-head">
+        <h2>Long-Tail &amp; Question Keywords</h2>
+        <button class="copy-all-btn" data-target="longtailTags" type="button">Copy All</button>
+      </div>
+      <div id="longtailTags" class="chip-grid"></div>
+    </div>
+
+    <div class="result-block">
+      <div class="result-head">
+        <div>
+          <h2>Hashtags</h2>
+          <span id="hashNote" class="mini-note"></span>
+        </div>
+        <button class="copy-all-btn" data-target="hashtagTags" type="button">Copy All</button>
+      </div>
+      <div id="hashtagTags" class="chip-grid"></div>
+    </div>
+
+    <div class="result-block">
+      <div class="result-head">
+        <h2>Related / LSI Keywords</h2>
+        <button class="copy-all-btn" data-target="relatedTags" type="button">Copy All</button>
+      </div>
+      <div id="relatedTags" class="chip-grid"></div>
+    </div>
+
+    <div class="legend">
+      <span><i class="dot low"></i> Low competition — easier to rank</span>
+      <span><i class="dot med"></i> Medium competition</span>
+      <span><i class="dot high"></i> High competition — very popular</span>
+    </div>
+
+    <div class="global-actions">
+      <button id="copyEverythingBtn" class="btn btn-primary" type="button">📋 Copy Everything</button>
+      <button id="downloadBtn" class="btn btn-ghost" type="button">⬇ Download .txt</button>
+    </div>
+  </section>
+
+  <div class="ad-slot ad-mid" aria-label="advertisement"><span>Ad Space — in-content</span></div>
+
+  <!-- HINDI GUIDE (always visible, not collapsed) -->
+  <section class="panel guide-panel">
+    <h2 class="guide-title">📘 इस टूल का उपयोग कैसे करें (Hindi Usage Guide)</h2>
+    <ol class="guide-steps">
+      <li><strong>Topic डालें</strong> — अपना वीडियो टाइटल, पोस्ट टॉपिक या ब्लॉग कीवर्ड बॉक्स में टाइप करें। जितना specific topic होगा, tags उतने ही अच्छे बनेंगे।</li>
+      <li><strong>Niche चुनें</strong> — अपने content की category (Business, Tech, Food, Fitness आदि) select करें ताकि hashtags relevant मिलें।</li>
+      <li><strong>Platform चुनें</strong> — YouTube, Instagram, Twitter/X, Facebook या Blog/SEO में से चुनें। हर platform की character/hashtag limit अलग होती है, जो नीचे stats bar में दिखेगी।</li>
+      <li><strong>Generate Tags दबाएं</strong> — Primary Tags, Long-Tail Keywords, Hashtags और Related Keywords चार अलग sections में तुरंत मिल जाएंगे।</li>
+      <li><strong>Tag पर क्लिक करें</strong> — कोई भी tag क्लिक करते ही clipboard में copy हो जाएगा। पूरे section को एक साथ copy करने के लिए "Copy All" बटन दबाएं।</li>
+      <li><strong>Shuffle करें</strong> — अगर नए variations चाहिए तो "🔀 Shuffle Results" दबाएं, वही topic के नए tags मिलेंगे।</li>
+      <li><strong>Download करें</strong> — सभी tags को .txt file में save करने के लिए "Download .txt" पर क्लिक करें।</li>
+    </ol>
+    <div class="guide-tips">
+      <h3>💰 पैसे कमाने के तरीके (Monetization Tips)</h3>
+      <ul>
+        <li>YouTube videos में सही tags लगाने से watch time और search ranking दोनों बढ़ती हैं — जिससे AdSense income बढ़ता है।</li>
+        <li>Instagram Reels पर niche-specific hashtags लगाने से नए followers मिलते हैं जो brand collaborations के लिए ज़रूरी हैं।</li>
+        <li>Blog/SEO tags का इस्तेमाल meta keywords और headings में करें — organic traffic बढ़ने से ad revenue और affiliate sales दोनों बढ़ते हैं।</li>
+        <li>Freelancers अपने Upwork/Fiverr gig titles में भी ये keywords इस्तेमाल कर सकते हैं ताकि gig search में ऊपर दिखे।</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="ad-slot ad-bottom" aria-label="advertisement"><span>Ad Space — bottom banner</span></div>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<footer class="site-footer">
+  <p>⚡ Built by IncomeAIHub — Free AI Tools for Indian Freelancers, Creators &amp; Small Businesses</p>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- word banks ---------------- */
+  var MODIFIERS = ["Best","Top 10","Free","Easy","Ultimate","Complete","Advanced","Simple","Quick","Proven","Powerful","Smart","Effective","Modern"];
+  var PREFIX_WORDS = ["How to","What is","Why","When to","Where to find","Which"];
+  var SUFFIX_WORDS = ["Guide","Tips","Tutorial","Ideas","Hacks","Strategy","Examples","Checklist","for Beginners","2026","Explained","Step by Step","Secrets","Mistakes to Avoid","Course"];
+
+  var NICHE_POOLS = {
+    general:    ["trending","viral","explore","instadaily","contentcreator","digitalindia","smallbusiness","reels","motivation","inspiration","newpost","followformore","viralpost","dailycontent"],
+    business:   ["smallbusiness","entrepreneur","startupindia","businessgrowth","marketing","businessowner","hustle","successmindset","businesstips","digitalmarketing","branding","leadership","businessstrategy","growthhacking"],
+    tech:       ["technology","tech","coding","ai","softwaredeveloper","programming","gadgets","innovation","startuptech","machinelearning","webdevelopment","techindia","artificialintelligence","developerlife"],
+    fitness:    ["fitness","gym","workout","fitindia","healthylifestyle","fitnessmotivation","weightloss","homeworkout","fitfam","strongnotskinny","cardio","gymlife","fitnessjourney","bodybuilding"],
+    food:       ["foodie","foodblogger","indianfood","recipe","homecooking","foodphotography","yummy","streetfood","foodlover","cookingathome","tasty","foodgram","easyrecipes","indiancuisine"],
+    travel:     ["travel","travelindia","wanderlust","travelgram","incredibleindia","explore","travelphotography","traveldiaries","backpacking","solotravel","vacation","travelblogger","tripplanning","travelgoals"],
+    fashion:    ["fashion","style","ootd","fashionblogger","indianfashion","streetstyle","fashionista","outfitoftheday","trendingfashion","fashiongram","styleinspo","lookbook","fashiontrends","stylish"],
+    education:  ["education","study","studygram","learning","studentlife","onlinelearning","upsc","exampreparation","edtech","knowledge","studytips","motivationforstudents","learnwithme","studyhard"],
+    finance:    ["finance","personalfinance","investing","moneytips","stockmarket","financialfreedom","mutualfunds","wealthbuilding","savemoney","financeindia","budgeting","investmenttips","moneymanagement","richmindset"],
+    beauty:     ["beauty","skincare","makeup","beautytips","glowup","skincareroutine","selfcare","beautyblogger","indianbeauty","makeuptutorial","naturalbeauty","beautycare","glowingskin","makeuplover"],
+    gaming:     ["gaming","gamer","pcgaming","mobilegaming","esports","gamingcommunity","gameplay","indiangamer","streamer","twitch","gamingsetup","gamerlife","gamingindia","gamingzone"],
+    music:      ["music","musician","indiemusic","singer","musicproducer","newmusic","musiclovers","liveperformance","songwriter","hiphop","bollywoodmusic","musicvideo","originalmusic","musiccover"],
+    photography:["photography","photographer","photooftheday","indianphotography","portraitphotography","naturephotography","cameraphotography","photoshoot","instaphoto","candidphotography","weddingphotography","streetphotography","photoedit","goldenhour"],
+    realestate: ["realestate","property","realestateindia","homebuying","investment","dreamhome","realtor","housing","propertyinvestment","realestateagent","flatforsale","landforsale","realestatetips","homeloan"],
+    health:     ["health","wellness","healthylifestyle","healthtips","mentalhealth","selfcare","nutrition","holistichealth","healthawareness","wellnessjourney","healthyliving","ayurveda","immunity","healthyhabits"],
+    motivation: ["motivation","motivationalquotes","successquotes","inspiration","mindset","selfimprovement","positivethinking","dailymotivation","goals","hustle","growthmindset","believeinyourself","nevergiveup","mindsetshift"]
+  };
+
+  var PLATFORM_HASHTAG_LIMIT = { youtube:8, instagram:20, twitter:4, facebook:5, seo:6 };
+  var PLATFORM_HASHTAG_NOTE = {
+    youtube:  "Use a few in your video description — YouTube ranks mainly on the Tags box above.",
+    instagram:"Recommended 15–20 hashtags for best reach (max 30 allowed).",
+    twitter:  "Keep it to 1–4 hashtags — too many hurts engagement on X.",
+    facebook: "Facebook favours 2–5 hashtags, not more.",
+    seo:      "Use these as secondary keywords in headings, not as literal hashtags."
+  };
+
+  /* ---------------- state ---------------- */
+  var state = { platform: "youtube", history: [] }; // history is session-only (in-memory), resets on reload
+
+  /* ---------------- helpers ---------------- */
+  function titleCase(s){
+    return s.replace(/\S+/g, function(w){ return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase(); });
+  }
+  function slugify(s){
+    return s.toLowerCase().replace(/[^a-z0-9\s]/g,'').split(/\s+/).filter(Boolean).join('');
+  }
+  function shuffle(arr){
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+  function uniq(arr){
+    var seen = {}, out = [];
+    for (var i=0;i<arr.length;i++){
+      var k = arr[i].toLowerCase();
+      if (!seen[k]){ seen[k]=true; out.push(arr[i]); }
+    }
+    return out;
+  }
+  function randScoreClass(){
+    var r = Math.random();
+    if (r < 0.55) return "low";
+    if (r < 0.85) return "med";
+    return "high";
+  }
+  function scoreTitle(cls){
+    if (cls === "low") return "Competition: Low — easier to rank";
+    if (cls === "med") return "Competition: Medium";
+    return "Competition: High — very popular term";
+  }
+
+  /* ---------------- generators ---------------- */
+  function generatePrimary(topic){
+    var tc = titleCase(topic);
+    var out = [tc];
+    shuffle(MODIFIERS).slice(0,6).forEach(function(m){
+      out.push(m + " " + tc);
+      out.push(tc + " " + m);
+    });
+    return uniq(out).slice(0,14);
+  }
+
+  function generateLongTail(topic){
+    var tc = titleCase(topic);
+    var out = [];
+    shuffle(PREFIX_WORDS).slice(0,4).forEach(function(p){ out.push(p + " " + topic); });
+    shuffle(SUFFIX_WORDS).slice(0,9).forEach(function(s){ out.push(tc + " " + s); });
+    return uniq(out).slice(0,12);
+  }
+
+  function generateRelated(topic, niche){
+    var tc = titleCase(topic);
+    var pool = NICHE_POOLS[niche] || NICHE_POOLS.general;
+    var out = shuffle(pool).slice(0,10).map(function(w){ return tc + " " + titleCase(w); });
+    return uniq(out).slice(0,10);
+  }
+
+  function generateHashtags(topic, niche, platform){
+    var limit = PLATFORM_HASHTAG_LIMIT[platform] || 10;
+    var tags = ["#" + slugify(topic)];
+    topic.trim().split(/\s+/).forEach(function(w){
+      if (w.length > 2) tags.push("#" + slugify(w));
+    });
+    var pool = shuffle(NICHE_POOLS[niche] || NICHE_POOLS.general);
+    for (var i=0; i<pool.length && tags.length < limit; i++){
+      tags.push("#" + pool[i]);
+    }
+    return uniq(tags).slice(0, limit);
+  }
+
+  /* ---------------- rendering ---------------- */
+  function renderChips(containerId, list){
+    var el = document.getElementById(containerId);
+    el.innerHTML = "";
+    if (!list.length){
+      var p = document.createElement("p");
+      p.className = "empty-note";
+      p.textContent = "Nothing here for this platform.";
+      el.appendChild(p);
+      return;
+    }
+    list.forEach(function(text){
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "chip";
+      var dot = document.createElement("i");
+      var cls = randScoreClass();
+      dot.className = "dot " + cls;
+      dot.title = scoreTitle(cls);
+      var span = document.createElement("span");
+      span.textContent = text;
+      btn.appendChild(dot);
+      btn.appendChild(span);
+      btn.addEventListener("click", function(txt, chipEl){
+        return function(){ copyText(txt, chipEl); };
+      }(text, btn));
+      el.appendChild(btn);
+    });
+  }
+
+  function chipTexts(containerId){
+    var els = document.querySelectorAll("#" + containerId + " .chip span");
+    var out = [];
+    els.forEach(function(e){ out.push(e.textContent); });
+    return out;
+  }
+
+  /* ---------------- clipboard + toast ---------------- */
+  var toastTimer = null;
+  function showToast(msg){
+    var t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ t.classList.remove("show"); }, 1700);
+  }
+
+  function copyToClipboard(text){
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      return navigator.clipboard.writeText(text);
+    }
+    return new Promise(function(resolve, reject){
+      try{
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        resolve();
+      } catch(e){ reject(e); }
+    });
+  }
+
+  function copyText(text, chipEl){
+    copyToClipboard(text).then(function(){
+      showToast("Copied: " + text);
+      if (chipEl){
+        chipEl.classList.add("copied");
+        setTimeout(function(){ chipEl.classList.remove("copied"); }, 900);
+      }
+    }).catch(function(){
+      showToast("Could not copy — please copy manually");
+    });
+  }
+
+  /* ---------------- stats / limit bar ---------------- */
+  function updateStats(platform, primary, longtail, hashtags, related){
+    var countEl = document.getElementById("statCount");
+    var charsEl = document.getElementById("statChars");
+    var fill = document.getElementById("limitFill");
+    var label = document.getElementById("limitLabel");
+
+    var count, chars, limit, limitLabel;
+
+    if (platform === "youtube"){
+      var all = primary.concat(longtail);
+      count = all.length;
+      chars = all.join(", ").length;
+      limit = 500;
+      limitLabel = "YouTube tag box: " + chars + " / " + limit + " chars";
+    } else if (platform === "instagram"){
+      count = hashtags.length;
+      chars = hashtags.join(" ").length;
+      limit = 30;
+      limitLabel = "Instagram hashtags: " + count + " / " + limit;
+    } else if (platform === "twitter"){
+      count = hashtags.length;
+      chars = hashtags.join(" ").length;
+      limit = 4;
+      limitLabel = "X/Twitter hashtags: " + count + " / " + limit + " recommended";
+    } else if (platform === "facebook"){
+      count = hashtags.length;
+      chars = hashtags.join(" ").length;
+      limit = 5;
+      limitLabel = "Facebook hashtags: " + count + " / " + limit + " recommended";
+    } else { // seo
+      var kws = primary.concat(longtail).concat(related);
+      count = kws.length;
+      chars = kws.join(", ").length;
+      limit = 20;
+      limitLabel = "SEO keywords: " + count + " / " + limit + " recommended";
+    }
+
+    countEl.textContent = count;
+    charsEl.textContent = chars;
+
+    var ratio = platform === "youtube" ? (chars/limit) : (count/limit);
+    ratio = Math.min(ratio, 1.3);
+    var pct = Math.min(ratio * 100, 100);
+    fill.style.width = pct + "%";
+    if (ratio < 0.7) fill.style.background = "var(--green)";
+    else if (ratio < 0.95) fill.style.background = "var(--warn)";
+    else fill.style.background = "var(--danger)";
+
+    label.textContent = limitLabel;
+  }
+
+  /* ---------------- history (session only) ---------------- */
+  function pushHistory(topic, platform, niche){
+    var entry = { topic: topic, platform: platform, niche: niche };
+    state.history = state.history.filter(function(h){ return h.topic.toLowerCase() !== topic.toLowerCase(); });
+    state.history.unshift(entry);
+    state.history = state.history.slice(0, 6);
+    renderHistory();
+  }
+  function renderHistory(){
+    var row = document.getElementById("historyRow");
+    var wrap = document.getElementById("historyChips");
+    wrap.innerHTML = "";
+    if (!state.history.length){ row.hidden = true; return; }
+    row.hidden = false;
+    state.history.forEach(function(h){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "hist-chip";
+      b.textContent = h.topic;
+      b.addEventListener("click", function(){
+        document.getElementById("topicInput").value = h.topic;
+        document.getElementById("nicheSelect").value = h.niche;
+        setPlatform(h.platform);
+        updateCharCount();
+        generate(true);
+      });
+      wrap.appendChild(b);
+    });
+  }
+
+  /* ---------------- platform tabs ---------------- */
+  function setPlatform(p){
+    state.platform = p;
+    document.querySelectorAll(".ptab").forEach(function(t){
+      t.classList.toggle("active", t.getAttribute("data-platform") === p);
+    });
+  }
+
+  /* ---------------- main generate ---------------- */
+  function generate(skipHistory){
+    var topicInput = document.getElementById("topicInput");
+    var topic = topicInput.value.trim();
+    if (!topic){
+      showToast("Please type a topic first");
+      topicInput.focus();
+      return;
+    }
+    var niche = document.getElementById("nicheSelect").value;
+    var platform = state.platform;
+
+    var primary = generatePrimary(topic);
+    var longtail = generateLongTail(topic);
+    var related = generateRelated(topic, niche);
+    var hashtags = generateHashtags(topic, niche, platform);
+
+    renderChips("primaryTags", primary);
+    renderChips("longtailTags", longtail);
+    renderChips("relatedTags", related);
+    renderChips("hashtagTags", hashtags);
+
+    document.getElementById("hashNote").textContent = PLATFORM_HASHTAG_NOTE[platform] || "";
+    updateStats(platform, primary, longtail, hashtags, related);
+
+    document.getElementById("resultsSection").hidden = false;
+    document.getElementById("shuffleBtn").disabled = false;
+
+    if (!skipHistory) pushHistory(topic, platform, niche);
+
+    // remember for shuffle/all-copy/download
+    state.last = { topic: topic, niche: niche, platform: platform, primary: primary, longtail: longtail, related: related, hashtags: hashtags };
+  }
+
+  /* ---------------- char counter ---------------- */
+  function updateCharCount(){
+    var input = document.getElementById("topicInput");
+    var el = document.getElementById("charCount");
+    var len = input.value.length;
+    el.textContent = len + " / 100";
+    el.classList.toggle("warn", len > 85);
+  }
+
+  /* ---------------- download ---------------- */
+  function downloadTxt(){
+    if (!state.last){ showToast("Generate tags first"); return; }
+    var d = state.last;
+    var lines = [];
+    lines.push("TAG GENERATOR — IncomeAIHub");
+    lines.push("Topic: " + d.topic);
+    lines.push("Platform: " + d.platform + "   Niche: " + d.niche);
+    lines.push("Generated: " + new Date().toLocaleString());
+    lines.push("");
+    lines.push("=== PRIMARY TAGS / KEYWORDS ===");
+    lines.push(d.primary.join(", "));
+    lines.push("");
+    lines.push("=== LONG-TAIL & QUESTION KEYWORDS ===");
+    lines.push(d.longtail.join(", "));
+    lines.push("");
+    lines.push("=== HASHTAGS ===");
+    lines.push(d.hashtags.join(" "));
+    lines.push("");
+    lines.push("=== RELATED / LSI KEYWORDS ===");
+    lines.push(d.related.join(", "));
+
+    var blob = new Blob([lines.join("\n")], { type: "text/plain" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "tag-generator-" + (slugify(d.topic) || "tags") + ".txt";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast("Downloaded .txt file");
+  }
+
+  /* ---------------- wire up events ---------------- */
+  document.getElementById("generateBtn").addEventListener("click", function(){ generate(false); });
+  document.getElementById("shuffleBtn").addEventListener("click", function(){ generate(true); });
+  document.getElementById("clearBtn").addEventListener("click", function(){
+    document.getElementById("topicInput").value = "";
+    updateCharCount();
+    document.getElementById("resultsSection").hidden = true;
+    document.getElementById("shuffleBtn").disabled = true;
+    state.last = null;
+  });
+  document.getElementById("topicInput").addEventListener("input", updateCharCount);
+  document.getElementById("topicInput").addEventListener("keydown", function(e){
+    if (e.key === "Enter") generate(false);
+  });
+
+  document.getElementById("platformTabs").addEventListener("click", function(e){
+    var btn = e.target.closest(".ptab");
+    if (!btn) return;
+    setPlatform(btn.getAttribute("data-platform"));
+    if (state.last) generate(true);
+  });
+
+  document.querySelectorAll(".copy-all-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var target = btn.getAttribute("data-target");
+      var texts = chipTexts(target);
+      if (!texts.length){ showToast("Nothing to copy yet"); return; }
+      var sep = target === "hashtagTags" ? " " : ", ";
+      copyToClipboard(texts.join(sep)).then(function(){
+        showToast("Copied " + texts.length + " tags");
+      }).catch(function(){ showToast("Could not copy — please copy manually"); });
+    });
+  });
+
+  document.getElementById("copyEverythingBtn").addEventListener("click", function(){
+    if (!state.last){ showToast("Generate tags first"); return; }
+    var d = state.last;
+    var block =
+      "PRIMARY TAGS:\n" + d.primary.join(", ") + "\n\n" +
+      "LONG-TAIL KEYWORDS:\n" + d.longtail.join(", ") + "\n\n" +
+      "HASHTAGS:\n" + d.hashtags.join(" ") + "\n\n" +
+      "RELATED KEYWORDS:\n" + d.related.join(", ");
+    copyToClipboard(block).then(function(){
+      showToast("Everything copied to clipboard");
+    }).catch(function(){ showToast("Could not copy — please copy manually"); });
+  });
+
+  document.getElementById("downloadBtn").addEventListener("click", downloadTxt);
+
+  updateCharCount();
+})();
+</script>
+</body>
+</html>
